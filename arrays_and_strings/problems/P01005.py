@@ -19,7 +19,8 @@ TEST_CASE = [
     ({"s1": "pale", "s2": "bale"}, True),
     ({"s1": "pale", "s2": "bake"}, False),
     ({"s1": "iiabcd", "s2": "iabcd"}, True),
-    ({"s1": "iiabcd", "s2": "piabcd"}, True)
+    ({"s1": "iiabcd", "s2": "piabcd"}, True),
+    ({"s1": "iiapcd", "s2": "piabcd"}, False)
 ]
 
 
