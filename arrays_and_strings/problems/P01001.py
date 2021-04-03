@@ -4,7 +4,7 @@ Is Unique: implement and algorithm to determine if a string has all unique chara
 What if you cannot use additional data structures?
 """
 
-from utils.sort_utils import quick_sort
+from utils.sort_utils import quick_sort, ascending
 from utils.test_utils import test_cases_iterator
 
 NUM_CHARS = 128
@@ -34,15 +34,13 @@ def if_all_unique(string: str, char_set=CHAR_SET) -> bool:
 
 
 def if_all_unique_mod(string: str, char_set=CHAR_SET) -> bool:
-    def f(a, b):
-        return a < b
 
     char_set_size = len(char_set)
     string_len = len(string)
     if string_len > char_set_size:
         return False
     else:
-        sorted_string = quick_sort([ch for ch in string], f, False)
+        sorted_string = quick_sort([ch for ch in string], ascending, False)
         for i in range(string_len):
             current = sorted_string[i]
             if (current not in char_set) or ((i != string_len - 1) and (current == sorted_string[i + 1])):

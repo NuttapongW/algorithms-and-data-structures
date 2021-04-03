@@ -17,6 +17,14 @@ def swap(arr, i, j):
     arr[j] = temp
 
 
+def ascending(a, b):
+    return a < b
+
+
+def descending(a, b):
+    return a > b
+
+
 def bubble_sort(array, f):
     """
     Sort the input array and return the new object. Average runtime complexity ~O(N^2)
@@ -162,7 +170,7 @@ def merge_sort(array, f):
     return array if size <= 1 else sort_two_lists(merge_sort(array[:mid], f), merge_sort(array[mid:], f))
 
 
-def quick_sort(array, f, shuffle=True):
+def quick_sort(array, f, inplace=True):
     """
     Sort the input array and return the new object. Average runtime complexity ~O(N log N)
 
@@ -170,30 +178,41 @@ def quick_sort(array, f, shuffle=True):
     :type array: list[ITEM]
     :param f: f(A, B) both of type ITEM, return True when A should be sorted before B and vice versa False
     :type f: f[(ITEM, ITEM), bool]
-    :param shuffle: to shuffle the input before sort or not (need only highest recursive call)
-    :type shuffle: bool
+    :param inplace: if True, sort array inplace else return a copy of sorted array
+    :type inplace: bool
     :return: list of sorted items
     :rtype: list[ITEM]
     """
 
-    size = len(array)
-    if size <= 1:
-        return array
-    else:
-        arr = copy.deepcopy(array)
-        if shuffle:
-            random.shuffle(arr)
-        i_before = 0
-        i_pivot = size - 1
-        pivot = arr[i_pivot]
+    def quick_sort_impl(arr, first, last):
 
-        while i_before < i_pivot:
-            while not f(arr[i_before], pivot) and i_pivot > 0:
-                swap(arr, i_before, i_pivot)
-                swap(arr, i_before, i_pivot - 1)
-                i_pivot -= 1
-            i_before += 1
-            if not f(arr[i_pivot - 1], pivot) and i_pivot > 0:
-                swap(arr, i_pivot, i_pivot - 1)
-                i_pivot -= 1
-        return quick_sort(arr[:i_pivot], f, False) + list([pivot]) + quick_sort(arr[(i_pivot + 1):], f, False)
+        if last <= first:
+            pass
+        else:
+            i_before = first
+            i_pivot = last
+            pivot = arr[i_pivot]
+
+            while i_before < i_pivot:
+                while not f(arr[i_before], pivot) and i_pivot > i_before:
+                    swap(arr, i_before, i_pivot)
+                    swap(arr, i_before, i_pivot - 1)
+                    i_pivot -= 1
+                i_before += 1
+                if not f(arr[i_pivot - 1], pivot) and i_pivot > i_before:
+                    swap(arr, i_pivot, i_pivot - 1)
+                    i_pivot -= 1
+
+            quick_sort_impl(arr, first, i_pivot - 1)
+            quick_sort_impl(arr, (i_pivot + 1), last)
+
+    random.shuffle(array)
+    a = array if inplace else copy.deepcopy(array)
+    size = len(a)
+    quick_sort_impl(a, 0, size - 1)
+    if not inplace:
+        return a
+
+
+if __name__ == '__main__':
+    pass
