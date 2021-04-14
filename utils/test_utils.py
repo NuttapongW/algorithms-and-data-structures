@@ -1,7 +1,7 @@
 from time import time
 
 
-def test_cases_iterator(f, cases):
+def test_cases_iterator(f, cases, transformer=None):
     """
     Iteratively test the cases with each respective expected output
 
@@ -15,5 +15,6 @@ def test_cases_iterator(f, cases):
     start = time()
     for inputs, expected in cases:
         result = f(**inputs)
-        assert result == expected, f"Failed with inputs: {inputs}, expected: {expected} but got: {result}"
+        assert (result == expected) if transformer is None else (transformer(result) == transformer(expected)), \
+            f"Failed with inputs: {inputs}, expected: {expected} but got: {result}"
     print(f"Successfully test {len(cases)} cases in {round((time() - start) * 1000000)} us-> All passed")
