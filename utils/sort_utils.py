@@ -69,8 +69,10 @@ def selection_sort(array, f):
     arr = copy.deepcopy(array)
     size = len(arr)
 
-    def recursive(remain, prefix=list([])):
+    def recursive(remain, prefix=None):
         _size = len(remain)
+        if prefix is None:
+            prefix = []
         if _size == 1:
             return prefix + remain
         else:
@@ -212,6 +214,62 @@ def quick_sort(array, f, inplace=True):
     quick_sort_impl(a, 0, size - 1)
     if not inplace:
         return a
+
+
+def merge_sort_2(arr, f):
+    size = len(arr)
+    if size == 1:
+        return arr
+    else:
+        mid_index = size // 2
+        first_half = merge_sort_2(arr[:mid_index], f)
+        first_len = mid_index
+        latter_half = merge_sort_2(arr[mid_index:], f)
+        latter_len = size - mid_index
+        first_index = 0
+        latter_index = 0
+        output = []
+        for _ in range(size):
+            if first_index < first_len and (
+                    not latter_index < latter_len or f(first_half[first_index], latter_half[latter_index])):
+                output.append(first_half[first_index])
+                first_index += 1
+            else:
+                output.append(latter_half[latter_index])
+                latter_index += 1
+        return output
+
+
+count = 0
+
+
+def quick_sort_2(arr, f, start=None, finish=None):
+    start = start or 0
+    finish = finish or len(arr)
+    if finish - start == 1:
+        pass
+    else:
+        front_index = start + 1
+        back_index = finish - 1
+        pivot_index = start
+        pivot = arr[pivot_index]
+
+        while front_index <= back_index:
+            if f(arr[front_index], pivot):
+                arr[front_index], arr[pivot_index] = arr[pivot_index], arr[front_index]
+                front_index += 1
+                pivot_index += 1
+            else:
+                arr[front_index], arr[back_index] = arr[back_index], arr[front_index]
+                back_index -= 1
+
+        quick_sort_2(arr, f, min(start, pivot_index + 1), max(start, pivot_index + 1))
+        quick_sort_2(arr, f, min(pivot_index + 1, finish), max(pivot_index + 1, finish))
+
+
+def is_sorted(arr, f):
+    compared = arr[0] == arr[1] or f(arr[0], arr[1])
+    return compared if len(arr) == 2 else (compared and is_sorted(arr[1:], f))
 
 
 if __name__ == '__main__':
